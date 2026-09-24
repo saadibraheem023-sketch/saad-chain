@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Saad Chain</title>
+    <style>
+        body { font-family: Arial; background: #1a1a1a; color: #fff; padding: 20px; }
+        .block { background: #2a2a2a; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #4CAF50; }
+        h1 { color: #4CAF50; }
+    </style>
+</head>
+<body>
+    <h1>⛓️ Saad Chain Explorer</h1>
+    <p>Total Blocks: {{ chain|length }}</p>
+    {% for block in chain %}
+    <div class="block">
+        <h3>Block #{{ block.index }}</h3>
+        <p><strong>Proof:</strong> {{ block.proof }}</p>
+        <p><strong>Previous Hash:</strong> {{ block.previous_hash[:20] }}...</p>
+        <p><strong>Transactions:</strong> {{ block.transactions|length }}</p>
+    </div>
+    {% endfor %}
+</body>
+</html>
+
+<h2>Send Transaction</h2>
+<form action="/transaction" method="POST">
+    <input type="text" name="sender" placeholder="Sender Address" required>
+    <input type="text" name="receiver" placeholder="Receiver Address" required>
+    <input type="number" name="amount" placeholder="Amount" required>
+    <button type="submit">Send</button>
+</form>

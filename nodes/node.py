@@ -13,6 +13,12 @@ blockchain = Blockchain()
 
 peers = set()
 
+from flask import render_template
+
+@app.route("/explorer", methods=["GET"])
+def explorer():
+    return render_template("index.html", chain=blockchain.chain)
+
 
 @app.route("/mine", methods=["GET"])
 def mine():
@@ -44,42 +50,52 @@ def mine():
         "block": block.to_dict()  # <--- أضف .to_dict() هنا
 }
     return jsonify(response), 200
-
-
-@app.route("/transaction", methods=["POST"])
-def add_transaction():
-
-    data = request.get_json()
-
-    required = [
-        "sender",
-        "receiver",
-        "amount"
-    ]
-
-    if not all(field in data for field in required):
-        return "Missing fields", 400
-
-    index = blockchain.add_transaction(
-        data["sender"],
-        data["receiver"],
-        data["amount"]
-    )
-
+@app.route("/", methods=["GET"])
+def home():
     return jsonify({
-        "message": f"Transaction will be added to block {index}"
-    }), 201
-
-
+        "message": "Welcome to Saad Chain!",
+        "total_blocks": len(blockchain.chain),
+        "chain": [block.to_dict() for block in blockchain.chain]
+    }), 200
 @app.route("/chain", methods=["GET"])
 def get_chain():
-
     response = {
-        "chain": blockchain.chain,
+        "chain": [block.to_dict() for block in blockchain.chain],
         "length": len(blockchain.chain)
     }
-
     return jsonify(response), 200
+
+
+
+
+
+
+from flask import request, jsonify
+
+@app.route('/transaction', methods=['POST'])
+def add_transaction():
+    # 1. محاولة قراءة البيانات كـ JSON (إذا جاءت من Postman)
+    transaction_data = request.get_json(silent=True)
+    
+    # 2. إذا لم تكن JSON، اقرأها كـ Form Data (إذا جاءت من المتصفح)
+    if not transaction_data:
+        transaction_data = request.form
+    
+    # 3. الآن نستخرج البيانات (سواء كانت من JSON أو Form)
+    sender = transaction_data.get('sender')
+    receiver = transaction_data.get('receiver')
+    amount = transaction_data.get('amount')
+    
+    # 4. التحقق من وجود البيانات
+    if not sender or not receiver or not amount:
+        return jsonify({"message": "Missing data"}), 400
+    
+    # 5. إضافة المعاملة
+    blockchain.add_transaction(sender, receiver, amount)
+    
+    return jsonify({"message": "Transaction added successfully"}), 201
+
+
 
 
 @app.route("/valid", methods=["GET"])
