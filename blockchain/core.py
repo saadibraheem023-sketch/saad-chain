@@ -8,17 +8,18 @@ import json
 
 class Blockchain:
 
-    def __init__(self):
+    def __init__(self,db_name='blockchain.db'):
         self.chain = []
         self.pending_transactions = []
         self.difficulty = 3  # قللنا الصعوبة سابقاً
+        self.db_name=db_name
         self.load_chain()  # <--- تحميل السلسلة من قاعدة البيانات
         if not self.chain:
             self.create_genesis_block()  # إنشاء بلوك البداية فقط إذا كانت السلسلة فارغة
 
     def save_block(self, block):
         """حفظ بلوك في قاعدة البيانات"""
-        conn = sqlite3.connect('blockchain.db')
+        conn = sqlite3.connect('self.db_name')
         cursor = conn.cursor()
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS blocks (
@@ -37,7 +38,7 @@ class Blockchain:
 
     def load_chain(self):
             """تحميل السلسلة من قاعدة البيانات عند بدء التشغيل"""
-            conn = sqlite3.connect('blockchain.db')
+            conn = sqlite3.connect('self.db_name')
             cursor = conn.cursor()
             cursor.execute('CREATE TABLE IF NOT EXISTS blocks (block_index INTEGER PRIMARY KEY, timestamp REAL, transactions TEXT, previous_hash TEXT, proof INTEGER)')
             cursor.execute('SELECT * FROM blocks ORDER BY block_index')
