@@ -1,19 +1,49 @@
-# Saad Chain - Simple Blockchain in Python
+# ⛓️ Saad Chain - Simple Blockchain in Python
 
-مشروع بلوكشين بسيط تم بناؤه باستخدام Python و Flask. يهدف إلى فهم أساسيات تقنية البلوكشين مثل التعدين (Mining)، إثبات العمل (Proof of Work)، والمعاملات (Transactions).
+![Python](https://img.shields.io/badge/Python-3.14-blue?style=for-the-badge&logo=python)
+![Flask](https://img.shields.io/badge/Flask-3.0-green?style=for-the-badge&logo=flask)
+![SQLite](https://img.shields.io/badge/SQLite-Database-blue?style=for-the-badge&logo=sqlite)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-## المميزات
-- إنشاء بلوك البداية (Genesis Block).
-- تعدين بلوكات جديدة (Mining).
-- إضافة معاملات (Transactions).
-- التحقق من صحة السلسلة (Chain Validity).
+> مشروع بلوكشين بسيط ومتكامل تم بناؤه باستخدام **Python** و **Flask**. يهدف إلى فهم أساسيات تقنية البلوكشين مثل التعدين (Mining)، إثبات العمل (Proof of Work)، المعاملات (Transactions)، وشبكات P2P اللامركزية.
 
-## كيفية التشغيل
-1. قم بتثبيت المكتبات: `pip install flask requests`
-2. شغل السيرفر: `python -m nodes.node`
-3. افتح المتصفح على: `http://127.0.0.1:5005/mine`
+---
 
-## التقنيات المستخدمة
-- Python
-- Flask
-- REST API
+## 📖 جدول المحتويات
+- [المميزات](#-المميزات)
+- [التقنيات المستخدمة](#-التقنيات-المستخدمة)
+- [هيكل المشروع](#-هيكل-المشروع)
+- [كيفية التشغيل](#-كيفية-التشغيل)
+- [واجهات API](#-واجهات-api)
+- [المساهمة](#-المساهمة)
+- [الترخيص](#-الترخيص)
+
+---
+
+## ✨ المميزات
+
+- 🧱 **إنشاء بلوك البداية (Genesis Block):** نقطة انطلاق السلسلة.
+- ⛏️ **تعدين البلوكات (Mining):** باستخدام خوارزمية إثبات العمل (Proof of Work).
+- 💸 **إضافة المعاملات (Transactions):** مع دعم التوقيع الرقمي.
+- ✅ **التحقق من صحة السلسلة (Chain Validity):** التأكد من عدم التلاعب.
+- 🔐 **نظام المحفظة (Wallet):** توليد مفاتيح عامة وخاصة (ECDSA).
+- 💾 **قاعدة بيانات SQLite:** لحفظ البلوكات بشكل دائم.
+- 🌐 **شبكة P2P:** ربط عدة عقد (Nodes) ومزامنتها تلقائياً.
+- 🎨 **واجهة مستخدم (HTML/CSS):** لعرض البلوكات وإرسال المعاملات.
+
+---
+
+## 🛠️ التقنيات المستخدمة
+
+| التقنية | الاستخدام |
+|---------|-----------|
+| **Python 3.14** | لغة البرمجة الأساسية |
+| **Flask** | إطار العمل لبناء الـ API |
+| **SQLite** | قاعدة بيانات لحفظ البلوكات |
+| **ECDSA** | التوقيع الرقمي وتوليد المفاتيح |
+| **HTML/CSS** | واجهة المستخدم |
+| **Git/GitHub** | إدارة الإصدارات |
+
+---
+
+## 📂 هيكل المشروع
