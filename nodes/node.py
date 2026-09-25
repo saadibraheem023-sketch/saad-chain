@@ -3,6 +3,7 @@ from blockchain.block import Block
 from blockchain.core import Blockchain   # <--- أضف هذا السطر
 import requests
 import uuid
+from flask import render_template
 
 
 app = Flask(__name__)
@@ -18,6 +19,8 @@ from flask import render_template
 @app.route("/explorer", methods=["GET"])
 def explorer():
     return render_template("index.html", chain=blockchain.chain)
+
+
 
 
 @app.route("/mine", methods=["GET"])
@@ -74,26 +77,22 @@ from flask import request, jsonify
 
 @app.route('/transaction', methods=['POST'])
 def add_transaction():
-    # 1. محاولة قراءة البيانات كـ JSON (إذا جاءت من Postman)
-    transaction_data = request.get_json(silent=True)
+    transaction_data = request.get_json(silent=True) or request.form
     
-    # 2. إذا لم تكن JSON، اقرأها كـ Form Data (إذا جاءت من المتصفح)
-    if not transaction_data:
-        transaction_data = request.form
-    
-    # 3. الآن نستخرج البيانات (سواء كانت من JSON أو Form)
     sender = transaction_data.get('sender')
     receiver = transaction_data.get('receiver')
     amount = transaction_data.get('amount')
+    signature = transaction_data.get('signature')  # التوقيع الجديد
     
-    # 4. التحقق من وجود البيانات
     if not sender or not receiver or not amount:
-        return jsonify({"message": "Missing data"}), 400
+        return jsonify({"message": "بيانات ناقصة"}), 400
     
-    # 5. إضافة المعاملة
-    blockchain.add_transaction(sender, receiver, amount)
+    success, message = blockchain.add_transaction(sender, receiver, amount, signature)
     
-    return jsonify({"message": "Transaction added successfully"}), 201
+    if not success:
+        return jsonify({"message": message}), 400
+    
+    return jsonify({"message": message}), 201
 
 
 

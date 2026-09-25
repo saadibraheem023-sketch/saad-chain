@@ -1,20 +1,60 @@
 import hashlib
 import time
-
 from .block import Block
+from blockchain.transaction import Transaction
+import sqlite3
+import json
 
 
 class Blockchain:
 
     def __init__(self):
-
         self.chain = []
-
         self.pending_transactions = []
+        self.difficulty = 3  # قللنا الصعوبة سابقاً
+        self.load_chain()  # <--- تحميل السلسلة من قاعدة البيانات
+        if not self.chain:
+            self.create_genesis_block()  # إنشاء بلوك البداية فقط إذا كانت السلسلة فارغة
 
-        self.difficulty = 2
+    def save_block(self, block):
+        """حفظ بلوك في قاعدة البيانات"""
+        conn = sqlite3.connect('blockchain.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS blocks (
+            block_index INTEGER PRIMARY KEY,
+            timestamp REAL,
+            transactions TEXT,
+            previous_hash TEXT,
+            proof INTEGER
+        )
+    ''')
+        cursor.execute('INSERT OR REPLACE INTO blocks VALUES (?, ?, ?, ?, ?)',
+        (block.index, block.timestamp, json.dumps(block.transactions), 
+         block.previous_hash, block.proof))
+        conn.commit()
+        conn.close()
 
-        self.create_genesis_block()
+    def load_chain(self):
+            """تحميل السلسلة من قاعدة البيانات عند بدء التشغيل"""
+            conn = sqlite3.connect('blockchain.db')
+            cursor = conn.cursor()
+            cursor.execute('CREATE TABLE IF NOT EXISTS blocks (block_index INTEGER PRIMARY KEY, timestamp REAL, transactions TEXT, previous_hash TEXT, proof INTEGER)')
+            cursor.execute('SELECT * FROM blocks ORDER BY block_index')
+            rows = cursor.fetchall()
+            conn.close()
+        
+            if rows:
+                self.chain = []
+                for row in rows:
+                    block = Block(
+                        index=row[0],
+                        transactions=json.loads(row[2]),
+                        previous_hash=row[3],
+                        proof=row[4]
+                    )
+                    block.timestamp = row[1]  # إعادة تعيين الوقت الأصلي
+                    self.chain.append(block)
 
 
     def is_chain_valid(self, chain):
@@ -92,12 +132,17 @@ class Blockchain:
 
             proof += 1
 
-    def add_transaction(self, sender, receiver, amount):
-        self.pending_transactions.append({
-        "sender": sender,
-        "receiver": receiver,
-        "amount": amount
-    })
+    from blockchain.transaction import Transaction
+
+    def add_transaction(self, sender, receiver, amount, signature=None):
+        transaction = Transaction(sender, receiver, amount, signature)
+    
+    # التحقق من صحة التوقيع (إذا لم يكن المرسل "0")
+        if sender != "0" and not transaction.is_valid():
+            return False, "توقيع غير صالح"
+    
+        self.pending_transactions.append(transaction.to_dict())
+        return True, "تمت إضافة المعاملة"
 
     def mine_block(self, proof, previous_hash):
         block = Block(
@@ -108,6 +153,7 @@ class Blockchain:
     )
         self.pending_transactions = [] # تفريغ المعاملات المعلقة
         self.chain.append(block)
+        self.save_block(block) # حفظ البلوك في قاعدة البيانات
         return block
 
     def is_valid(self):
