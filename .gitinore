@@ -1,4 +1,26 @@
-venv/
+# Python
 __pycache__/
 *.pyc
-.env
+*.pyo
+
+# Virtual Environment
+venv/
+env/
+
+# Databases
+*.db
+blockchain.db
+blockchain_*.db
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary Files
+read.me
+self.db_name
+Untitled-*
