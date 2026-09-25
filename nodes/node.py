@@ -29,8 +29,18 @@ from flask import render_template
 def explorer():
     return render_template("index.html", chain=blockchain.chain)
 
+@app.route('/balance/<address>', methods=['GET'])
+def get_balance(address):
+    balance = blockchain.get_balance(address)
+    return jsonify({
+        "address": address,
+        "balance": balance
+    }), 200
 
 
+@app.route("/wallet", methods=["GET"])
+def wallet_page():
+    return render_template("wallet.html")
 
 @app.route("/mine", methods=["GET"])
 def mine():

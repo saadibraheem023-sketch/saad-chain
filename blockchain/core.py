@@ -17,6 +17,17 @@ class Blockchain:
         if not self.chain:
             self.create_genesis_block()  # إنشاء بلوك البداية فقط إذا كانت السلسلة فارغة
 
+
+    def get_balance(self, address):
+        """حساب رصيد عنوان محفظة معين بناءً على المعاملات في السلسلة"""
+        balance = 0
+        for block in self.chain:
+            for transaction in block.transactions:
+                if transaction['receiver'] == address:
+                    balance += transaction['amount']
+                if transaction['sender'] == address:
+                    balance -= transaction['amount']
+        return balance
     def save_block(self, block):
         """حفظ بلوك في قاعدة البيانات"""
         conn = sqlite3.connect('self.db_name')
