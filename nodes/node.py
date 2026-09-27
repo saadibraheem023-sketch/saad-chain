@@ -101,12 +101,13 @@ def add_transaction():
     sender = transaction_data.get('sender')
     receiver = transaction_data.get('receiver')
     amount = transaction_data.get('amount')
-    signature = transaction_data.get('signature')  # التوقيع الجديد
+    signature = transaction_data.get('signature')
+    public_key = transaction_data.get('public_key')  # المفتاح العام
     
     if not sender or not receiver or not amount:
         return jsonify({"message": "بيانات ناقصة"}), 400
     
-    success, message = blockchain.add_transaction(sender, receiver, amount, signature)
+    success, message = blockchain.add_transaction(sender, receiver, amount, signature, public_key)
     
     if not success:
         return jsonify({"message": message}), 400

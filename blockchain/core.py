@@ -146,13 +146,13 @@ class Blockchain:
 
     from blockchain.transaction import Transaction
 
-    def add_transaction(self, sender, receiver, amount, signature=None):
-        transaction = Transaction(sender, receiver, amount, signature)
-    
-    # التحقق من صحة التوقيع (إذا لم يكن المرسل "0")
+    def add_transaction(self, sender, receiver, amount, signature=None, public_key=None):
+        transaction = Transaction(sender, receiver, amount, signature, public_key)
+        
+        # التحقق من صحة التوقيع (إذا لم يكن المرسل "0")
         if sender != "0" and not transaction.is_valid():
             return False, "توقيع غير صالح"
-    
+        
         self.pending_transactions.append(transaction.to_dict())
         return True, "تمت إضافة المعاملة"
 
