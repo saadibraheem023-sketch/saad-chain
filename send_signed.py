@@ -11,7 +11,7 @@ print(f"المفتاح العام: {wallet.get_public_key_hex()}")
 # 2. بيانات المعاملة
 transaction_data = {
     "sender": wallet.get_address(),
-    "receiver": "عنوان_المستقبل_هنا",  # استبدل هذا بعنوان محفظة أخرى
+    "receiver": "f555bdfef013aeed50d1301ea4089e6dcdefce2525b489ceeb412bed5a6fdca1785a76a9031c67e02b46ad319a66802e28c8a19d4ed76789bdfcb615ec35c204",  # استبدل هذا بعنوان محفظة أخرى
     "amount": 10
 }
 
