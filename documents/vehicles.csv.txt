@@ -1,0 +1,5 @@
+vehicle,km,fuel,repairs
+Truck-01,1200,500,3
+Truck-02,900,430,1
+Truck-03,1500,720,5
+Truck-04,700,300,0
